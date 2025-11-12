@@ -28,6 +28,7 @@ import com.zybooks.roll.data.model.Category
 fun CategoryCard(
     category: Category,
     isAddCard: Boolean = false,
+    onClick
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -12,11 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.zybooks.roll.data.model.Category
 import com.zybooks.roll.ui.components.CategoryCard
 
 @Composable
-fun DeckScreen() {
+fun DeckScreen(navController: NavController) {
     val categories = listOf(
         Category(1, "Restaurants"),
         Category(2, "Hikes"),
