@@ -1,5 +1,7 @@
 package com.zybooks.roll.ui.screens
 
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,11 +19,11 @@ import com.zybooks.roll.data.model.Category
 import com.zybooks.roll.ui.components.CategoryCard
 
 @Composable
-fun DeckScreen(navController: NavController) {
+fun DeckScreen() {
     val categories = listOf(
         Category(1, "Restaurants"),
         Category(2, "Hikes"),
-        Category(-1, "Add Category") // special item
+        Category(3, "Activities")
     )
 
     Box(
@@ -35,16 +37,22 @@ fun DeckScreen(navController: NavController) {
             contentPadding = PaddingValues(16.dp)
         ) {
             items(categories) { category ->
-                if (category.id == -1) {
                     CategoryCard(
                         category = category,
-                        isAddCard = true
-                    )
-                } else {
-                    CategoryCard(
-                        category = category
+                        isAddCard = false,
+                        modifier = Modifier.clickable{
+                            Log.d("Deck screen", "Category card clicked")
+                        }
                     )
                 }
+            item{
+                CategoryCard(
+                    category = Category(id = 0, name = "Create Category"),
+                    isAddCard = true,
+                    modifier = Modifier.clickable{
+                        Log.d("Deck screen", "Add category clicked")
+                    }
+                )
             }
         }
     }

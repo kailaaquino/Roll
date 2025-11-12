@@ -27,12 +27,12 @@ import com.zybooks.roll.data.model.Category
 @Composable
 fun CategoryCard(
     category: Category,
+    modifier: Modifier = Modifier,
     isAddCard: Boolean = false,
-    onClick
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
     ) {
         Card(
             modifier = Modifier
@@ -59,8 +59,3 @@ fun CategoryCard(
     }
 }
 
-@Preview
-@Composable
-fun CategoryCardPreview() {
-    CategoryCard(category = Category(id = 1, name = "Restaurants"))
-}
