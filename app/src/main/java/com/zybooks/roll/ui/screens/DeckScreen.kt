@@ -19,7 +19,10 @@ import com.zybooks.roll.data.model.Category
 import com.zybooks.roll.ui.components.CategoryCard
 
 @Composable
-fun DeckScreen() {
+fun DeckScreen(
+    navController: NavController,
+    onAddCategoryClick: () -> Unit
+    ) {
     val categories = listOf(
         Category(1, "Restaurants"),
         Category(2, "Hikes"),
@@ -51,6 +54,7 @@ fun DeckScreen() {
                     isAddCard = true,
                     modifier = Modifier.clickable{
                         Log.d("Deck screen", "Add category clicked")
+                        onAddCategoryClick()
                     }
                 )
             }
