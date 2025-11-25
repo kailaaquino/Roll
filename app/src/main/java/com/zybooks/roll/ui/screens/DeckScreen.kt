@@ -43,11 +43,6 @@ fun DeckScreen(
             )
         }
     ) { innerPadding ->
-//        Box(
-//            modifier = Modifier.fillMaxSize()
-//                .padding(innerPadding),
-//            contentAlignment = Alignment.Center
-//        ) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
