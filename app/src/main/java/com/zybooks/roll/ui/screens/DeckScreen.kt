@@ -1,5 +1,6 @@
 package com.zybooks.roll.ui.screens
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +26,7 @@ import com.zybooks.roll.data.model.Category
 import com.zybooks.roll.ui.components.CategoryCard
 import com.zybooks.roll.viewmodel.DeckViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeckScreen(
     navController: NavController,
@@ -27,35 +34,49 @@ fun DeckScreen(
     onAddCategoryClick: () -> Unit
     ) {
     val categories = viewModel.categories
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(16.dp)
-        ) {
-            items(categories) { category ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Your Deck",
+                    style = MaterialTheme.typography.displayMedium,
+                    ) }
+            )
+        }
+    ) { innerPadding ->
+//        Box(
+//            modifier = Modifier.fillMaxSize()
+//                .padding(innerPadding),
+//            contentAlignment = Alignment.Center
+//        ) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+                items(categories) { category ->
                     CategoryCard(
                         category = category,
                         isAddCard = false,
-                        modifier = Modifier.clickable{
+                        modifier = Modifier.clickable {
                             Log.d("Deck screen", "Category card clicked")
                         }
                     )
                 }
-            item{
-                CategoryCard(
-                    category = Category(id = 0, name = "Create Category"),
-                    isAddCard = true,
-                    modifier = Modifier.clickable{
-                        Log.d("Deck screen", "Add category clicked")
-                        onAddCategoryClick()
-                    }
-                )
+                item {
+                    CategoryCard(
+                        category = Category(id = 0, name = "Create Category"),
+                        isAddCard = true,
+                        modifier = Modifier.clickable {
+                            Log.d("Deck screen", "Add category clicked")
+                            onAddCategoryClick()
+                        }
+                    )
+                }
             }
         }
-    }
+
 }

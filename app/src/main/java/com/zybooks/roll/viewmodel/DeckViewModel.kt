@@ -7,8 +7,8 @@ import com.zybooks.roll.data.model.Category
 class DeckViewModel: ViewModel() {
     private val _categories = mutableStateListOf(
         Category(1, "Restaurants"),
-        Category(2, "Hikes"),
-        Category(3, "Activities")
+//        Category(2, "Hikes"),
+//        Category(3, "Activities")
     )
     val categories: List<Category> = _categories
 
