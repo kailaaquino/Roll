@@ -14,21 +14,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zybooks.roll.data.model.Category
 import com.zybooks.roll.ui.components.CategoryCard
+import com.zybooks.roll.viewmodel.DeckViewModel
 
 @Composable
 fun DeckScreen(
     navController: NavController,
+    viewModel: DeckViewModel = viewModel(),
     onAddCategoryClick: () -> Unit
     ) {
-    val categories = listOf(
-        Category(1, "Restaurants"),
-        Category(2, "Hikes"),
-        Category(3, "Activities")
-    )
-
+    val categories = viewModel.categories
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

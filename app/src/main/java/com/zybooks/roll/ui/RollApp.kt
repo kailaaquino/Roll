@@ -1,11 +1,13 @@
 package com.zybooks.roll.ui
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zybooks.roll.ui.screens.DeckScreen
 import com.zybooks.roll.ui.screens.CreateCategoryScreen
+import com.zybooks.roll.viewmodel.DeckViewModel
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
@@ -23,6 +25,8 @@ sealed class Routes {
 fun RollApp(
 ) {
     val navController = rememberNavController()
+    val deckViewModel: DeckViewModel = viewModel()
+
 
     NavHost(
         navController = navController,
@@ -31,13 +35,17 @@ fun RollApp(
         composable<Routes.Deck> {
             DeckScreen(
                 navController = navController,
+                viewModel = deckViewModel,
                 onAddCategoryClick = {
                     navController.navigate(Routes.CreateCategory)
                 }
             )
         }
         composable<Routes.CreateCategory> {
-            CreateCategoryScreen(navController)
+            CreateCategoryScreen(
+                navController = navController,
+                viewModel = deckViewModel
+            )
         }
     }
 }

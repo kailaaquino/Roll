@@ -27,13 +27,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zybooks.roll.data.model.Category
+import com.zybooks.roll.viewmodel.DeckViewModel
 
 @Composable
 fun CreateCategoryScreen(
-    navController: NavController
-) {
+    navController: NavController,
+    viewModel: DeckViewModel = viewModel()
+    ) {
     var categoryName by remember { mutableStateOf("") }
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -94,6 +97,7 @@ fun CreateCategoryScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         onClick = {
+                            viewModel.addCategory(categoryName)
                             navController.popBackStack()
                         }
                     )
