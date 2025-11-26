@@ -1,6 +1,5 @@
 package com.zybooks.roll.ui.screens
 
-import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,19 +19,19 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zybooks.roll.data.model.ActivityItem
-import com.zybooks.roll.data.model.Category
 import com.zybooks.roll.ui.components.ActivityCard
-import com.zybooks.roll.ui.components.CategoryCard
 import com.zybooks.roll.viewmodel.DeckViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryDetailsScreen(
     navController: NavController,
-    viewModel: DeckViewModel = viewModel(),
+    viewModel: DeckViewModel,
+    categoryId: Int?,
+    onAddActivityClick: () -> Unit
+){
+    val activities = viewModel.getActivitiesForCategory(categoryId)
 
-    ){
-    val activities = viewModel.activities
 
     Scaffold(
         topBar = {
@@ -66,6 +65,7 @@ fun CategoryDetailsScreen(
                     isAddCard = true,
                     modifier = Modifier.clickable {
                         Log.d("Detail screen", "Add activity clicked")
+                        onAddActivityClick()
                     }
                 )
             }

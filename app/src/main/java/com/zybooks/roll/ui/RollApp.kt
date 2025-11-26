@@ -5,7 +5,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.zybooks.roll.ui.screens.CategoryDetailsScreen
+import com.zybooks.roll.ui.screens.CreateActivityScreen
 import com.zybooks.roll.ui.screens.DeckScreen
 import com.zybooks.roll.ui.screens.CreateCategoryScreen
 import com.zybooks.roll.viewmodel.DeckViewModel
@@ -22,6 +24,9 @@ sealed class Routes {
 
     @Serializable
     data class CategoryDetail(val categoryId: Int)
+
+    @Serializable
+    data class CreateActivity(val categoryId: Int)
 
 }
 
@@ -53,9 +58,26 @@ fun RollApp(
             )
         }
         composable<Routes.CategoryDetail> { backStackEntry ->
+            val args = backStackEntry.toRoute<Routes.CategoryDetail>()
+
             CategoryDetailsScreen(
                 navController = navController,
-//                categoryId = backStackEntry.arguments?.getInt("categoryId")
+                viewModel = deckViewModel,
+                categoryId = args.categoryId,
+                onAddActivityClick = {
+                    navController.navigate(
+                        Routes.CreateActivity(args.categoryId)
+                    )
+                }
+            )
+        }
+        composable<Routes.CreateActivity> { backStackEntry ->
+            val args = backStackEntry.toRoute<Routes.CreateActivity>()
+
+            CreateActivityScreen(
+                navController = navController,
+                viewModel = deckViewModel,
+                categoryId = args.categoryId
             )
         }
     }

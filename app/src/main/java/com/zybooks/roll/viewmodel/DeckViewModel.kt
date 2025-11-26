@@ -21,7 +21,7 @@ class DeckViewModel: ViewModel() {
         _categories.add(Category(newId, name))
     }
 
-    fun getActivitiesForCategory(categoryId: Int): List<ActivityItem> {
+    fun getActivitiesForCategory(categoryId: Int?): List<ActivityItem> {
         return _activities.filter { it.categoryId == categoryId }
     }
     fun addActivity(name: String, categoryId: Int){

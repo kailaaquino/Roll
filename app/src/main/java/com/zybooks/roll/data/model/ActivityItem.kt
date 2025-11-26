@@ -1,6 +1,4 @@
 package com.zybooks.roll.data.model
-
-
 data class ActivityItem(
     val id: Int = 0,
     val name: String,
