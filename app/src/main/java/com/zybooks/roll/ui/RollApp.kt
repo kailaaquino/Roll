@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.zybooks.roll.ui.screens.CategoryDetailsScreen
 import com.zybooks.roll.ui.screens.DeckScreen
 import com.zybooks.roll.ui.screens.CreateCategoryScreen
 import com.zybooks.roll.viewmodel.DeckViewModel
@@ -18,6 +19,10 @@ sealed class Routes {
 
     @Serializable
     data object CreateCategory
+
+    @Serializable
+    data class CategoryDetail(val categoryId: Int)
+
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -45,6 +50,12 @@ fun RollApp(
             CreateCategoryScreen(
                 navController = navController,
                 viewModel = deckViewModel
+            )
+        }
+        composable<Routes.CategoryDetail> { backStackEntry ->
+            CategoryDetailsScreen(
+                navController = navController,
+//                categoryId = backStackEntry.arguments?.getInt("categoryId")
             )
         }
     }
