@@ -19,10 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zybooks.roll.data.model.ActivityItem
+import com.zybooks.roll.ui.Routes
 import com.zybooks.roll.ui.components.ActivityCard
 import com.zybooks.roll.viewmodel.DeckViewModel
+import kotlinx.serialization.InternalSerializationApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, InternalSerializationApi::class)
 @Composable
 fun CategoryDetailsScreen(
     navController: NavController,
@@ -56,6 +58,9 @@ fun CategoryDetailsScreen(
                     modifier = Modifier
                         .clickable {
                             Log.d("Detail screen", "Add category clicked")
+                            navController.navigate(
+                                Routes.ActivityDetails(activity.id)
+                            )
                         }
                 )
             }

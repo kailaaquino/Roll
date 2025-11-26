@@ -1,11 +1,13 @@
 package com.zybooks.roll.ui
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.zybooks.roll.ui.screens.ActivityDetailsScreen
 import com.zybooks.roll.ui.screens.CategoryDetailsScreen
 import com.zybooks.roll.ui.screens.CreateActivityScreen
 import com.zybooks.roll.ui.screens.DeckScreen
@@ -28,6 +30,8 @@ sealed class Routes {
     @Serializable
     data class CreateActivity(val categoryId: Int)
 
+    @Serializable
+    data class ActivityDetails(val activityId: Int)
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -79,6 +83,21 @@ fun RollApp(
                 viewModel = deckViewModel,
                 categoryId = args.categoryId
             )
+        }
+        composable<Routes.ActivityDetails> { backStackEntry ->
+            val args = backStackEntry.toRoute<Routes.ActivityDetails>()
+            val activity = deckViewModel.getActivityById(args.activityId)
+
+            if (activity != null) {
+                ActivityDetailsScreen(
+                    navController = navController,
+                    viewModel = deckViewModel,
+                    activity = activity
+                )
+            } else {
+                // fallback UI if somehow not found
+                Text("Activity not found")
+            }
         }
     }
 }

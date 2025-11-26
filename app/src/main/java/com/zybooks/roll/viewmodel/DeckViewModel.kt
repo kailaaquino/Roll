@@ -29,6 +29,9 @@ class DeckViewModel: ViewModel() {
         return categories.find { it.id == categoryId }?.name ?: "Unknown Category"
     }
 
+    fun getActivityById(id: Int): ActivityItem? {
+        return activities.find { it.id == id }
+    }
 
     fun addActivity(name: String, categoryId: Int){
         val newId = (_activities.maxOfOrNull { it.id } ?: 0) + 1
