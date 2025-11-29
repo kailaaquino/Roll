@@ -19,7 +19,9 @@ fun RollScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Roll") }
+                title = { Text("Roll",
+                    style = MaterialTheme.typography.displayMedium,
+                    ) }
             )
         }
     ) { innerPadding ->

@@ -29,6 +29,7 @@ import com.zybooks.roll.ui.screens.CategoryDetailsScreen
 import com.zybooks.roll.ui.screens.CreateActivityScreen
 import com.zybooks.roll.ui.screens.DeckScreen
 import com.zybooks.roll.ui.screens.CreateCategoryScreen
+import com.zybooks.roll.ui.screens.RollScreen
 import com.zybooks.roll.viewmodel.DeckViewModel
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
@@ -37,6 +38,10 @@ import kotlinx.serialization.Serializable
 sealed class Routes {
     @Serializable
     data object Deck
+
+    @Serializable
+    data object Roll
+
 
     @Serializable
     data object CreateCategory
@@ -77,7 +82,13 @@ fun RollApp(
                 navItemList.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = selectedNavItemIndex == index,
-                        onClick = { selectedNavItemIndex = index },
+                        onClick = {
+                            selectedNavItemIndex = index
+                            when (item.name) {
+                                "Roll" -> navController.navigate(Routes.Roll)
+                                "Deck" -> navController.navigate(Routes.Deck)
+                            }
+                                  },
                         icon = {
                             Icon(imageVector = item.icon, contentDescription = item.name)
                         },
@@ -91,9 +102,12 @@ fun RollApp(
 
         NavHost(
             navController = navController,
-            startDestination = Routes.Deck,
+            startDestination = Routes.Roll,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable<Routes.Roll>{
+                RollScreen()
+            }
             composable<Routes.Deck> {
                 DeckScreen(
                     navController = navController,
