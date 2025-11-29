@@ -13,7 +13,10 @@ class DeckViewModel: ViewModel() {
     )
     val categories: List<Category> = _categories
 
-    private val _activities = mutableStateListOf<ActivityItem>()
+    private val _activities = mutableStateListOf(
+        ActivityItem(id = 1, name = "Pizza", address = "123 Pizza St San Luis Obispo, CA 93405", "Must try!", categoryId = 1),
+    )
+
     val activities: List<ActivityItem> = _activities
 
     fun addCategory(name: String) {
@@ -33,12 +36,19 @@ class DeckViewModel: ViewModel() {
         return activities.find { it.id == id }
     }
 
-    fun addActivity(name: String, categoryId: Int){
+    fun addActivity(
+        name: String,
+        categoryId: Int,
+        address: String? = null,
+        note: String? = null)
+    {
         val newId = (_activities.maxOfOrNull { it.id } ?: 0) + 1
         val activity = ActivityItem(
             id = newId,
             name = name,
             categoryId = categoryId,
+            address = address,
+            notes = note,
             isCompleted = false
         )
         _activities.add(activity)

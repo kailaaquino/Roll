@@ -113,8 +113,8 @@ fun CreateActivityScreen(
                             viewModel.addActivity(
                                 name = activityName,
                                 categoryId = categoryId,
-//                                address = activityAddress.ifBlank { null },
-//                                notes = activityNote.ifBlank { null }
+                                address = activityAddress.ifBlank { null },
+                                note = activityNote.ifBlank { null }
                             )
                             navController.popBackStack()
 

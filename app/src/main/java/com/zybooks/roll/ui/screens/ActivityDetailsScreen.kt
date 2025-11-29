@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -34,92 +35,90 @@ fun ActivityDetailsScreen(
     val note = activity.notes
     val categoryName = viewModel.getCategoryNameById(activity.categoryId)
 
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ){
+    ) {
+
+        // === CARD ===
         Card(
             modifier = Modifier
                 .aspectRatio(0.75f)
                 .padding(32.dp)
-        ){
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
-            )
-            {
+            ) {
+
+                // top-left symbol
                 Text(
                     text = categoryName,
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .padding(8.dp),
-                    style = MaterialTheme.typography.displaySmall,
+                    style = MaterialTheme.typography.titleLarge,
                     color = Color.Black
                 )
+
+                // bottom-right symbol
                 Text(
                     text = categoryName,
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(8.dp),
-                    style = MaterialTheme.typography.displaySmall,
+                    style = MaterialTheme.typography.titleLarge,
                     color = Color.Black
                 )
+
+                // Center content
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
+                        .align(Alignment.Center)
+                        .padding(horizontal = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
-                )
-                {
+                ) {
                     Text(
                         text = name,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
                     )
+
                     if (!address.isNullOrBlank()) {
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(Modifier.height(12.dp))
                         Text(
                             text = address,
                             style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center
                         )
                     }
-                    if (!note.isNullOrBlank()) {
-                        Spacer(modifier = Modifier.height(4.dp))
 
+                    if (!note.isNullOrBlank()) {
+                        Spacer(Modifier.height(8.dp))
                         Text(
                             text = note,
                             style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center
                         )
                     }
                 }
             }
         }
-        Column(
+
+        // === BUTTON AT BOTTOM ===
+        Button(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    navController.popBackStack()
-                    // to do function to mark as completed
-                }
-            ){
-                Text("Mark as Completed")
-            }
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 32.dp),
+            onClick = { navController.popBackStack() }
+        ) {
+            Text("Mark as Completed")
         }
-
     }
-
 }
