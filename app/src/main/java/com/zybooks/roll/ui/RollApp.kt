@@ -1,12 +1,25 @@
 package com.zybooks.roll.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Bookmarks
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.zybooks.roll.data.model.NavItem
 import com.zybooks.roll.ui.screens.ActivityDetailsScreen
 import com.zybooks.roll.ui.screens.CategoryDetailsScreen
 import com.zybooks.roll.ui.screens.CreateActivityScreen
@@ -41,62 +54,92 @@ fun RollApp(
     val navController = rememberNavController()
     val deckViewModel: DeckViewModel = viewModel()
 
+    val navItemList = listOf(
+        NavItem(
+            name = "Roll",
+            icon = Icons.Filled.Home
+        ),
+        NavItem(
+            name = "Deck",
+            icon = Icons.Filled.Bookmarks
+        )
+    )
 
-    NavHost(
-        navController = navController,
-        startDestination = Routes.Deck
-    ) {
-        composable<Routes.Deck> {
-            DeckScreen(
-                navController = navController,
-                viewModel = deckViewModel,
-                onAddCategoryClick = {
-                    navController.navigate(Routes.CreateCategory)
-                }
-            )
-        }
-        composable<Routes.CreateCategory> {
-            CreateCategoryScreen(
-                navController = navController,
-                viewModel = deckViewModel
-            )
-        }
-        composable<Routes.CategoryDetail> { backStackEntry ->
-            val args = backStackEntry.toRoute<Routes.CategoryDetail>()
-
-            CategoryDetailsScreen(
-                navController = navController,
-                viewModel = deckViewModel,
-                categoryId = args.categoryId,
-                onAddActivityClick = {
-                    navController.navigate(
-                        Routes.CreateActivity(args.categoryId)
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                navItemList.forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        selected = true,
+                        onClick = { },
+                        icon = {
+                            Icon(imageVector = item.icon, contentDescription = item.name)
+                        },
+                        label = { Text(item.name) }
                     )
                 }
-            )
+            }
         }
-        composable<Routes.CreateActivity> { backStackEntry ->
-            val args = backStackEntry.toRoute<Routes.CreateActivity>()
+    ) { innerPadding ->
 
-            CreateActivityScreen(
-                navController = navController,
-                viewModel = deckViewModel,
-                categoryId = args.categoryId
-            )
-        }
-        composable<Routes.ActivityDetails> { backStackEntry ->
-            val args = backStackEntry.toRoute<Routes.ActivityDetails>()
-            val activity = deckViewModel.getActivityById(args.activityId)
 
-            if (activity != null) {
-                ActivityDetailsScreen(
+        NavHost(
+            navController = navController,
+            startDestination = Routes.Deck,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable<Routes.Deck> {
+                DeckScreen(
                     navController = navController,
                     viewModel = deckViewModel,
-                    activity = activity
+                    onAddCategoryClick = {
+                        navController.navigate(Routes.CreateCategory)
+                    }
                 )
-            } else {
-                // fallback UI if somehow not found
-                Text("Activity not found")
+            }
+            composable<Routes.CreateCategory> {
+                CreateCategoryScreen(
+                    navController = navController,
+                    viewModel = deckViewModel
+                )
+            }
+            composable<Routes.CategoryDetail> { backStackEntry ->
+                val args = backStackEntry.toRoute<Routes.CategoryDetail>()
+
+                CategoryDetailsScreen(
+                    navController = navController,
+                    viewModel = deckViewModel,
+                    categoryId = args.categoryId,
+                    onAddActivityClick = {
+                        navController.navigate(
+                            Routes.CreateActivity(args.categoryId)
+                        )
+                    }
+                )
+            }
+            composable<Routes.CreateActivity> { backStackEntry ->
+                val args = backStackEntry.toRoute<Routes.CreateActivity>()
+
+                CreateActivityScreen(
+                    navController = navController,
+                    viewModel = deckViewModel,
+                    categoryId = args.categoryId
+                )
+            }
+            composable<Routes.ActivityDetails> { backStackEntry ->
+                val args = backStackEntry.toRoute<Routes.ActivityDetails>()
+                val activity = deckViewModel.getActivityById(args.activityId)
+
+                if (activity != null) {
+                    ActivityDetailsScreen(
+                        navController = navController,
+                        viewModel = deckViewModel,
+                        activity = activity
+                    )
+                } else {
+                    // fallback UI if somehow not found
+                    Text("Activity not found")
+                }
             }
         }
     }
