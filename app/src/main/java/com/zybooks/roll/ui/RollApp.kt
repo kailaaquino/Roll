@@ -42,7 +42,6 @@ sealed class Routes {
     @Serializable
     data object Roll
 
-
     @Serializable
     data object CreateCategory
 

@@ -19,6 +19,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -41,6 +42,7 @@ fun DeckScreen(
             TopAppBar(
                 title = { Text("Your Deck",
                     style = MaterialTheme.typography.displayMedium,
+                    fontWeight = FontWeight.Bold
                     ) }
             )
         }

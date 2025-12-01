@@ -10,11 +10,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -29,16 +31,21 @@ import kotlinx.serialization.InternalSerializationApi
 fun CategoryDetailsScreen(
     navController: NavController,
     viewModel: DeckViewModel,
-    categoryId: Int?,
+    categoryId: Int,
     onAddActivityClick: () -> Unit
 ){
     val activities = viewModel.getActivitiesForCategory(categoryId)
+    val categoryName = viewModel.getCategoryNameById(categoryId)
 
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Category Details") }
+                title = { Text(categoryName + " Details",
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold
+                    )
+                }
             )
         }
     ) { innerPadding ->
