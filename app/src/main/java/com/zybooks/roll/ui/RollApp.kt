@@ -30,6 +30,7 @@ import com.zybooks.roll.ui.screens.CreateActivityScreen
 import com.zybooks.roll.ui.screens.DeckScreen
 import com.zybooks.roll.ui.screens.CreateCategoryScreen
 import com.zybooks.roll.ui.screens.RollScreen
+import com.zybooks.roll.ui.screens.RolledActivityScreen
 import com.zybooks.roll.viewmodel.DeckViewModel
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
@@ -53,6 +54,9 @@ sealed class Routes {
 
     @Serializable
     data class ActivityDetails(val activityId: Int)
+
+    @Serializable
+    data class RolledActivity(val activityId: Int)
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -105,7 +109,10 @@ fun RollApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable<Routes.Roll>{
-                RollScreen(viewModel = deckViewModel)
+                RollScreen(
+                    navController = navController,
+                    viewModel = deckViewModel
+                )
             }
             composable<Routes.Deck> {
                 DeckScreen(
@@ -157,6 +164,29 @@ fun RollApp(
                     )
                 } else {
                     // fallback UI if somehow not found
+                    Text("Activity not found")
+                }
+            }
+            composable<Routes.RolledActivity> { backStackEntry ->
+                val args = backStackEntry.toRoute<Routes.RolledActivity>()
+                val activity = deckViewModel.getActivityById(args.activityId)
+
+                if (activity != null) {
+                    RolledActivityScreen(
+                        navController = navController,
+                        viewModel = deckViewModel,
+                        activity = activity,
+                        onGo = {
+                            navController.navigate(Routes.ActivityDetails(activity.id))
+                        },
+                        onRollAgain = {
+                            val newResult = deckViewModel.rollAnyActivity()
+                            if (newResult != null) {
+                                navController.navigate(Routes.RolledActivity(newResult.id))
+                            }
+                        }
+                    )
+                } else {
                     Text("Activity not found")
                 }
             }

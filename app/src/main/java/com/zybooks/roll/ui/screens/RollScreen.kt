@@ -26,12 +26,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.zybooks.roll.data.model.ActivityItem
+import com.zybooks.roll.ui.Routes
 import com.zybooks.roll.viewmodel.DeckViewModel
+import kotlinx.serialization.InternalSerializationApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, InternalSerializationApi::class)
 @Composable
 fun RollScreen(
+    navController: NavController,
     viewModel: DeckViewModel = viewModel(),
     ) {
     var rolledActivity by remember { mutableStateOf<ActivityItem?>(null) }
@@ -70,31 +74,11 @@ fun RollScreen(
                         val result = viewModel.rollAnyActivity()
                         if (result == null) {
                             rollMessage = "All activities are completed! Add more to keep rolling."
-                            rolledActivity = null
                         } else {
-                            rolledActivity = result
-                            rollMessage = ""
+                            navController.navigate(Routes.RolledActivity(result.id))
                         }
                     }
             )
-            if (rolledActivity != null) {
-                Text("You got: ${rolledActivity!!.name}")
-            } else if (rollMessage.isNotEmpty()) {
-                Text(
-                    text = rollMessage,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
-//            rolledActivity?.let { activity ->
-//                Text(
-//                    text = "You got: ${activity.name}",
-//                    style = MaterialTheme.typography.headlineSmall,
-//                    modifier = Modifier.padding(top = 16.dp),
-//                    textAlign = TextAlign.Center
-//                )
-//            }
-
         }
     }
 }
