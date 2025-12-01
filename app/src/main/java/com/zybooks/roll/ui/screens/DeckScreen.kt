@@ -70,9 +70,10 @@ fun DeckScreen(
                             if (rolled == null) {
                                 Log.d("DeckScreen", "All activities completed in this category! Add more to keep rolling.")
                             } else {
-                                Log.d("DeckScreen", "Rolled: ${rolled.name}")
+                                navController.navigate(Routes.RolledActivity(rolled.id))
                             }
                         }
+
                     )
                 }
                 item {

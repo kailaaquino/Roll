@@ -53,6 +53,14 @@ fun RolledActivityScreen(
         ){
             Text("Roll Again")
         }
+        Button(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        ){
+            Text("Close")
+        }
     }
 
 }
