@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zybooks.roll.data.model.ActivityItem
+import com.zybooks.roll.ui.components.ActivityDetailCard
 import com.zybooks.roll.viewmodel.DeckViewModel
 
 @Composable
@@ -30,95 +31,114 @@ fun ActivityDetailsScreen(
     viewModel: DeckViewModel,
     activity: ActivityItem
 ){
-    val name = activity.name
-    val address = activity.address
-    val note = activity.notes
-    val categoryName = viewModel.getCategoryNameById(activity.categoryId)
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-
     ) {
-
-        Card(
-            modifier = Modifier
-                .aspectRatio(0.75f)
-                .padding(32.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-
-                Text(
-                    text = categoryName,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(8.dp),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.Black
-                )
-
-                Text(
-                    text = categoryName,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(8.dp),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.Black
-                )
-
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = name,
-                        style = MaterialTheme.typography.headlineMedium,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    if (!address.isNullOrBlank()) {
-                        Spacer(Modifier.height(12.dp))
-                        Text(
-                            text = address,
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-
-                    if (!note.isNullOrBlank()) {
-                        Spacer(Modifier.height(8.dp))
-                        Text(
-                            text = note,
-                            style = MaterialTheme.typography.bodySmall,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            }
-        }
+        ActivityDetailCard(activity = activity, viewModel = viewModel)
 
         Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp, horizontal = 32.dp),
             onClick = {
                 viewModel.toggleActivityStatus(activity.id)
-//                navController.popBackStack()
-            }
+                navController.popBackStack()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
         ) {
             Text(
-                if (activity.isCompleted) "Mark as Incomplete" else "Mark as Completed"
+                if (activity.isCompleted) "Mark as Incomplete"
+                else "Mark as Completed"
             )
         }
     }
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(16.dp),
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally
+//
+//    ) {
+//
+//        Card(
+//            modifier = Modifier
+//                .aspectRatio(0.75f)
+//                .padding(32.dp)
+//        ) {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .padding(16.dp)
+//            ) {
+//
+//                Text(
+//                    text = categoryName,
+//                    modifier = Modifier
+//                        .align(Alignment.TopStart)
+//                        .padding(8.dp),
+//                    style = MaterialTheme.typography.titleLarge,
+//                    color = Color.Black
+//                )
+//
+//                Text(
+//                    text = categoryName,
+//                    modifier = Modifier
+//                        .align(Alignment.BottomEnd)
+//                        .padding(8.dp),
+//                    style = MaterialTheme.typography.titleLarge,
+//                    color = Color.Black
+//                )
+//
+//                Column(
+//                    modifier = Modifier
+//                        .align(Alignment.Center)
+//                        .padding(horizontal = 16.dp),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text(
+//                        text = name,
+//                        style = MaterialTheme.typography.headlineMedium,
+//                        textAlign = TextAlign.Center,
+//                        fontWeight = FontWeight.Bold
+//                    )
+//
+//                    if (!address.isNullOrBlank()) {
+//                        Spacer(Modifier.height(12.dp))
+//                        Text(
+//                            text = address,
+//                            style = MaterialTheme.typography.bodyMedium,
+//                            textAlign = TextAlign.Center
+//                        )
+//                    }
+//
+//                    if (!note.isNullOrBlank()) {
+//                        Spacer(Modifier.height(8.dp))
+//                        Text(
+//                            text = note,
+//                            style = MaterialTheme.typography.bodySmall,
+//                            textAlign = TextAlign.Center
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//
+//        Button(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(vertical = 8.dp, horizontal = 32.dp),
+//            onClick = {
+//                viewModel.toggleActivityStatus(activity.id)
+////                navController.popBackStack()
+//            }
+//        ) {
+//            Text(
+//                if (activity.isCompleted) "Mark as Incomplete" else "Mark as Completed"
+//            )
+//        }
+//    }
 }
