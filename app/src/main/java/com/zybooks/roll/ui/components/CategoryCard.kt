@@ -33,6 +33,7 @@ fun CategoryCard(
     category: Category,
     modifier: Modifier = Modifier,
     isAddCard: Boolean = false,
+    onRollClick: (Int) -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,8 +62,10 @@ fun CategoryCard(
             color = if (isAddCard) Color.Gray else Color.Black
         )
         OutlinedButton(
-            onClick = {  },
-            modifier = Modifier.wrapContentHeight().fillMaxWidth(),
+            onClick = { onRollClick(category.id) },
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
 
         ) {

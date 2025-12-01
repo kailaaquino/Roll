@@ -8,14 +8,17 @@ import com.zybooks.roll.data.model.Category
 class DeckViewModel: ViewModel() {
     private val _categories = mutableStateListOf(
         Category(1, "Restaurants"),
-//        Category(2, "Hikes"),
-//        Category(3, "Activities")
+        Category(2, "Hikes")
     )
     val categories: List<Category> = _categories
 
     private val _activities = mutableStateListOf(
         ActivityItem(id = 1, name = "Pizza", address = "123 Pizza St San Luis Obispo, CA 93405", "Must try!", categoryId = 1),
-    )
+        ActivityItem(id = 2, name = "BBQ", address = "123 BBQ St San Luis Obispo, CA 93405", categoryId = 1),
+        ActivityItem(id = 1, name = "Bishop", address = "123 Cerro St San Luis Obispo, CA 93405", "Must hike!", categoryId = 2),
+        ActivityItem(id = 2, name = "The P", address = "123 Grand St San Luis Obispo, CA 93405", "Easy hike!", categoryId = 2),
+
+        )
 
     val activities: List<ActivityItem> = _activities
 
@@ -52,5 +55,17 @@ class DeckViewModel: ViewModel() {
             isCompleted = false
         )
         _activities.add(activity)
+    }
+
+    fun rollAnyActivity(): ActivityItem? {
+        val incomplete = _activities.filter { !it.isCompleted }
+        return incomplete.randomOrNull()
+    }
+
+    fun rollActivityFromCategory(categoryId: Int): ActivityItem? {
+        val list = _activities.filter {
+            it.categoryId == categoryId && !it.isCompleted
+        }
+        return list.randomOrNull()
     }
 }

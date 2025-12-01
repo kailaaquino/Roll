@@ -105,7 +105,7 @@ fun RollApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable<Routes.Roll>{
-                RollScreen()
+                RollScreen(viewModel = deckViewModel)
             }
             composable<Routes.Deck> {
                 DeckScreen(

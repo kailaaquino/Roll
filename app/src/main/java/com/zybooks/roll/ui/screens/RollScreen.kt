@@ -15,15 +15,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.zybooks.roll.data.model.ActivityItem
+import com.zybooks.roll.viewmodel.DeckViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RollScreen() {
+fun RollScreen(
+    viewModel: DeckViewModel = viewModel(),
+    ) {
+    var rolledActivity by remember { mutableStateOf<ActivityItem?>(null) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -53,9 +65,17 @@ fun RollScreen() {
                 modifier = Modifier
                     .fillMaxSize(0.5f)
                     .clickable{
-
+                        rolledActivity = viewModel.rollAnyActivity()
                     }
             )
+            rolledActivity?.let { activity ->
+                Text(
+                    text = "You got: ${activity.name}",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(top = 16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
 
         }
     }

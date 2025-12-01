@@ -59,14 +59,15 @@ fun DeckScreen(
                 items(categories) { category ->
                     CategoryCard(
                         category = category,
-                        isAddCard = false,
-//                        modifier = Modifier.clickable {
-//                            Log.d("Deck screen", "Category card clicked")
-//                        }
                         modifier = Modifier.clickable {
                             navController.navigate(
                                 Routes.CategoryDetail(categoryId = category.id)
                             )
+                        },
+                        isAddCard = false,
+                        onRollClick = { categoryId ->
+                            val rolled = viewModel.rollActivityFromCategory(categoryId)
+                            Log.d("DeckScreen", "Rolled: ${rolled?.name}")
                         }
                     )
                 }
