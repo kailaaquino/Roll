@@ -44,7 +44,6 @@ fun ActivityDetailsScreen(
 
     ) {
 
-        // === CARD ===
         Card(
             modifier = Modifier
                 .aspectRatio(0.75f)
@@ -56,7 +55,6 @@ fun ActivityDetailsScreen(
                     .padding(16.dp)
             ) {
 
-                // top-left symbol
                 Text(
                     text = categoryName,
                     modifier = Modifier
@@ -66,7 +64,6 @@ fun ActivityDetailsScreen(
                     color = Color.Black
                 )
 
-                // bottom-right symbol
                 Text(
                     text = categoryName,
                     modifier = Modifier
@@ -76,7 +73,6 @@ fun ActivityDetailsScreen(
                     color = Color.Black
                 )
 
-                // Center content
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -111,7 +107,6 @@ fun ActivityDetailsScreen(
             }
         }
 
-        // === BUTTON AT BOTTOM ===
         Button(
             modifier = Modifier
                 .fillMaxWidth()
