@@ -15,8 +15,8 @@ class DeckViewModel: ViewModel() {
     private val _activities = mutableStateListOf(
         ActivityItem(id = 1, name = "Pizza", address = "123 Pizza St San Luis Obispo, CA 93405", "Must try!", categoryId = 1),
         ActivityItem(id = 2, name = "BBQ", address = "123 BBQ St San Luis Obispo, CA 93405", categoryId = 1),
-        ActivityItem(id = 1, name = "Bishop", address = "123 Cerro St San Luis Obispo, CA 93405", "Must hike!", categoryId = 2),
-        ActivityItem(id = 2, name = "The P", address = "123 Grand St San Luis Obispo, CA 93405", "Easy hike!", categoryId = 2),
+        ActivityItem(id = 3, name = "Bishop", address = "123 Cerro St San Luis Obispo, CA 93405", "Must hike!", categoryId = 2),
+        ActivityItem(id = 4, name = "The P", address = "123 Grand St San Luis Obispo, CA 93405", "Easy hike!", categoryId = 2),
 
         )
 
@@ -56,16 +56,44 @@ class DeckViewModel: ViewModel() {
         )
         _activities.add(activity)
     }
-
-    fun rollAnyActivity(): ActivityItem? {
-        val incomplete = _activities.filter { !it.isCompleted }
-        return incomplete.randomOrNull()
+    fun toggleActivityStatus(activityId: Int) {
+        val index = _activities.indexOfFirst { it.id == activityId }
+        if (index != -1) {
+            val old = _activities[index]
+            _activities[index] = old.copy(
+                isCompleted = !old.isCompleted
+            )
+        }
     }
 
-    fun rollActivityFromCategory(categoryId: Int): ActivityItem? {
-        val list = _activities.filter {
-            it.categoryId == categoryId && !it.isCompleted
+    fun rollAnyActivity(): ActivityItem? {
+        if (_activities.isEmpty()) {
+            return null
         }
-        return list.randomOrNull()
+
+        val incomplete = _activities.filter { !it.isCompleted }
+
+        if (incomplete.isEmpty()) {
+            return null
+        }
+
+        return incomplete.random()
+    }
+//        val incomplete = _activities.filter { !it.isCompleted }
+//        return incomplete.randomOrNull()
+
+
+    fun rollActivityFromCategory(categoryId: Int): ActivityItem? {
+        val activitiesInCategory = _activities.filter { it.categoryId == categoryId }
+        if (activitiesInCategory.isEmpty()) {
+            return null
+        }
+
+        val incomplete = activitiesInCategory.filter { !it.isCompleted }
+        return if (incomplete.isNotEmpty()) {
+            incomplete.random()
+        } else {
+            null
+        }
     }
 }

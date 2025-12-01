@@ -35,6 +35,8 @@ fun RollScreen(
     viewModel: DeckViewModel = viewModel(),
     ) {
     var rolledActivity by remember { mutableStateOf<ActivityItem?>(null) }
+    var rollMessage by remember { mutableStateOf("") }
+
 
     Scaffold(
         topBar = {
@@ -64,18 +66,34 @@ fun RollScreen(
                 contentDescription = "Dice",
                 modifier = Modifier
                     .fillMaxSize(0.5f)
-                    .clickable{
-                        rolledActivity = viewModel.rollAnyActivity()
+                    .clickable {
+                        val result = viewModel.rollAnyActivity()
+                        if (result == null) {
+                            rollMessage = "All activities are completed! Add more to keep rolling."
+                            rolledActivity = null
+                        } else {
+                            rolledActivity = result
+                            rollMessage = ""
+                        }
                     }
             )
-            rolledActivity?.let { activity ->
+            if (rolledActivity != null) {
+                Text("You got: ${rolledActivity!!.name}")
+            } else if (rollMessage.isNotEmpty()) {
                 Text(
-                    text = "You got: ${activity.name}",
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(top = 16.dp),
-                    textAlign = TextAlign.Center
+                    text = rollMessage,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall
                 )
             }
+//            rolledActivity?.let { activity ->
+//                Text(
+//                    text = "You got: ${activity.name}",
+//                    style = MaterialTheme.typography.headlineSmall,
+//                    modifier = Modifier.padding(top = 16.dp),
+//                    textAlign = TextAlign.Center
+//                )
+//            }
 
         }
     }

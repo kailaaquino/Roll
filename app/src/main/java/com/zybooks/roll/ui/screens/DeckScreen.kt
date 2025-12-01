@@ -67,7 +67,11 @@ fun DeckScreen(
                         isAddCard = false,
                         onRollClick = { categoryId ->
                             val rolled = viewModel.rollActivityFromCategory(categoryId)
-                            Log.d("DeckScreen", "Rolled: ${rolled?.name}")
+                            if (rolled == null) {
+                                Log.d("DeckScreen", "All activities completed in this category! Add more to keep rolling.")
+                            } else {
+                                Log.d("DeckScreen", "Rolled: ${rolled.name}")
+                            }
                         }
                     )
                 }

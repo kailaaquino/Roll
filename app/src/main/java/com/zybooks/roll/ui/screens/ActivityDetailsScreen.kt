@@ -111,9 +111,14 @@ fun ActivityDetailsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp, horizontal = 32.dp),
-            onClick = { navController.popBackStack() }
+            onClick = {
+                viewModel.toggleActivityStatus(activity.id)
+//                navController.popBackStack()
+            }
         ) {
-            Text("Mark as Completed")
+            Text(
+                if (activity.isCompleted) "Mark as Incomplete" else "Mark as Completed"
+            )
         }
     }
 }
