@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,7 +44,15 @@ fun RollScreen(
     var rollMessage by remember { mutableStateOf("") }
 
     val shouldRoll by rollViewModel.shouldRoll.collectAsState()
+    LaunchedEffect(Unit) {
+        rollViewModel.enableShakeDetection()
+    }
 
+    DisposableEffect(Unit) {
+        onDispose {
+            rollViewModel.disableShakeDetection()
+        }
+    }
     // When shake detected, perform roll
     LaunchedEffect(shouldRoll) {
         if (shouldRoll) {
