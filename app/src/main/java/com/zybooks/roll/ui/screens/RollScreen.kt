@@ -19,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,8 +30,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zybooks.roll.data.model.ActivityItem
 import com.zybooks.roll.ui.Routes
+import com.zybooks.roll.ui.animations.DiceAnimation
 import com.zybooks.roll.viewmodel.DeckViewModel
 import com.zybooks.roll.viewmodel.RollViewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
 
 @OptIn(ExperimentalMaterial3Api::class, InternalSerializationApi::class)
@@ -40,6 +45,8 @@ fun RollScreen(
     deckViewModel: DeckViewModel = viewModel(),
     rollViewModel: RollViewModel = viewModel()
     ) {
+    val coroutineScope = rememberCoroutineScope()
+    var isRolling by remember { mutableStateOf(false) }
     var rolledActivity by remember { mutableStateOf<ActivityItem?>(null) }
     var rollMessage by remember { mutableStateOf("") }
 
@@ -56,6 +63,9 @@ fun RollScreen(
     // When shake detected, perform roll
     LaunchedEffect(shouldRoll) {
         if (shouldRoll) {
+            isRolling = true
+            delay(2500)
+
             val result = deckViewModel.rollAnyActivity()
 
             if (result == null) {
@@ -65,10 +75,9 @@ fun RollScreen(
             }
 
             rollViewModel.resetRollFlag()
+//            isRolling = false
         }
     }
-
-
 
     Scaffold(
         topBar = {
@@ -93,20 +102,29 @@ fun RollScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Center
             )
-            Image(
-                painter = painterResource(R.drawable.dice),
-                contentDescription = "Dice",
-                modifier = Modifier
-                    .fillMaxSize(0.5f)
-                    .clickable {
-                        val result = deckViewModel.rollAnyActivity()
-                        if (result == null) {
-                            rollMessage = "All activities are completed! Add more to keep rolling."
-                        } else {
-                            navController.navigate(Routes.RolledActivity(result.id))
+            if (isRolling){
+                DiceAnimation()
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.dice),
+                    contentDescription = "Dice",
+                    modifier = Modifier
+                        .fillMaxSize(0.5f)
+                        .clickable {
+                            isRolling = true
+                            coroutineScope.launch {
+                                delay(2500)
+                                val result = deckViewModel.rollAnyActivity()
+                                if (result != null) {
+                                    navController.navigate(Routes.RolledActivity(result.id))
+                                }
+                                else{
+                                    rollMessage = "All activities are completed! Add more to keep rolling."
+                                }
+                            }
                         }
-                    }
-            )
+                )
+            }
         }
     }
 }
