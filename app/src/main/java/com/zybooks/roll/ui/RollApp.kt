@@ -1,12 +1,9 @@
 package com.zybooks.roll.ui
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -32,6 +29,7 @@ import com.zybooks.roll.ui.screens.CreateCategoryScreen
 import com.zybooks.roll.ui.screens.RollScreen
 import com.zybooks.roll.ui.screens.RolledActivityScreen
 import com.zybooks.roll.viewmodel.DeckViewModel
+import com.zybooks.roll.viewmodel.RollViewModel
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
@@ -64,7 +62,10 @@ sealed class Routes {
 fun RollApp(
 ) {
     val navController = rememberNavController()
+
     val deckViewModel: DeckViewModel = viewModel()
+    val rollViewModel: RollViewModel = viewModel()
+
 
     val navItemList = listOf(
         NavItem(
@@ -111,7 +112,8 @@ fun RollApp(
             composable<Routes.Roll>{
                 RollScreen(
                     navController = navController,
-                    viewModel = deckViewModel
+                    deckViewModel = deckViewModel,
+                    rollViewModel = rollViewModel
                 )
             }
             composable<Routes.Deck> {
