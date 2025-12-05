@@ -15,14 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zybooks.roll.data.model.ActivityItem
+import com.zybooks.roll.ui.Routes
 import com.zybooks.roll.ui.components.ActivityDetailCard
 import com.zybooks.roll.viewmodel.DeckViewModel
+import kotlinx.serialization.InternalSerializationApi
 
+@OptIn(InternalSerializationApi::class)
 @Composable
 fun RolledActivityScreen(
     navController: NavController,
     viewModel: DeckViewModel,
     activity: ActivityItem,
+    sourceScreen: String,
     onGo: () -> Unit,
     onRollAgain: () -> Unit,
 ){
@@ -54,7 +58,13 @@ fun RolledActivityScreen(
             Text("Roll Again")
         }
         Button(
-            onClick = { navController.popBackStack() },
+            onClick = {
+                if (sourceScreen == "roll") {
+                    navController.popBackStack(Routes.Roll, false)
+                } else {
+                    navController.popBackStack(Routes.Deck, false)
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)

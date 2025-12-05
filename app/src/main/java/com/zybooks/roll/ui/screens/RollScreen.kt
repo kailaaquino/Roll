@@ -70,7 +70,7 @@ fun RollScreen(
             if (result == null) {
                 rollMessage = "All activities are completed! Add more to keep rolling."
             } else {
-                navController.navigate(Routes.RolledActivity(result.id, null))
+                navController.navigate(Routes.RolledActivity(result.id, null, "roll"))
             }
 
             rollViewModel.resetRollFlag()
@@ -115,7 +115,7 @@ fun RollScreen(
                                 delay(2500)
                                 val result = deckViewModel.rollAnyActivity()
                                 if (result != null) {
-                                    navController.navigate(Routes.RolledActivity(result.id))
+                                    navController.navigate(Routes.RolledActivity(result.id, null, "roll"))
                                 }
                                 else{
                                     rollMessage = "All activities are completed! Add more to keep rolling."

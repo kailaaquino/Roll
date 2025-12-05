@@ -54,7 +54,10 @@ sealed class Routes {
     data class ActivityDetails(val activityId: Int)
 
     @Serializable
-    data class RolledActivity(val activityId: Int, val categoryId: Int? = null)
+    data class RolledActivity(
+        val activityId: Int,
+        val categoryId: Int? = null,
+        val sourceScreen: String)
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -173,12 +176,14 @@ fun RollApp(
                 val args = backStackEntry.toRoute<Routes.RolledActivity>()
                 val activity = deckViewModel.getActivityById(args.activityId)
                 val rollCategory = args.categoryId
+                val source = args.sourceScreen
 
                 if (activity != null) {
                     RolledActivityScreen(
                         navController = navController,
                         viewModel = deckViewModel,
                         activity = activity,
+                        sourceScreen = source,
                         onGo = {
                             navController.navigate(Routes.ActivityDetails(activity.id))
                         },
@@ -190,7 +195,7 @@ fun RollApp(
                             }
 
                             newResult?.let {
-                                navController.navigate(Routes.RolledActivity(it.id, rollCategory))
+                                navController.navigate(Routes.RolledActivity(it.id, rollCategory, source))
                             }
 
                         }
