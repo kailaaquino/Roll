@@ -54,7 +54,7 @@ sealed class Routes {
     data class ActivityDetails(val activityId: Int)
 
     @Serializable
-    data class RolledActivity(val activityId: Int)
+    data class RolledActivity(val activityId: Int, val categoryId: Int? = null)
 }
 
 @OptIn(InternalSerializationApi::class)
@@ -172,6 +172,7 @@ fun RollApp(
             composable<Routes.RolledActivity> { backStackEntry ->
                 val args = backStackEntry.toRoute<Routes.RolledActivity>()
                 val activity = deckViewModel.getActivityById(args.activityId)
+                val rollCategory = args.categoryId
 
                 if (activity != null) {
                     RolledActivityScreen(
@@ -182,10 +183,16 @@ fun RollApp(
                             navController.navigate(Routes.ActivityDetails(activity.id))
                         },
                         onRollAgain = {
-                            val newResult = deckViewModel.rollAnyActivity()
-                            if (newResult != null) {
-                                navController.navigate(Routes.RolledActivity(newResult.id))
+                            val newResult = if (rollCategory == null) {
+                                deckViewModel.rollAnyActivity()
+                            } else {
+                                deckViewModel.rollActivityFromCategory(rollCategory)
                             }
+
+                            newResult?.let {
+                                navController.navigate(Routes.RolledActivity(it.id, rollCategory))
+                            }
+
                         }
                     )
                 } else {

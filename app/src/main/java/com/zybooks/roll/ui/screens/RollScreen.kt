@@ -70,7 +70,7 @@ fun RollScreen(
             if (result == null) {
                 rollMessage = "All activities are completed! Add more to keep rolling."
             } else {
-                navController.navigate(Routes.RolledActivity(result.id))
+                navController.navigate(Routes.RolledActivity(result.id, null))
             }
 
             rollViewModel.resetRollFlag()
