@@ -26,6 +26,6 @@ fun DiceAnimation() {
     LottieAnimation(
         composition = composition,
         progress = { progress },
-        modifier = Modifier.fillMaxSize(0.5f)
+        modifier = Modifier.fillMaxSize(0.90f)
     )
 }

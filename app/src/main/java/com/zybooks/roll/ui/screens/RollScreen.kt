@@ -33,7 +33,6 @@ import com.zybooks.roll.ui.Routes
 import com.zybooks.roll.ui.animations.DiceAnimation
 import com.zybooks.roll.viewmodel.DeckViewModel
 import com.zybooks.roll.viewmodel.RollViewModel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
@@ -106,10 +105,10 @@ fun RollScreen(
                 DiceAnimation()
             } else {
                 Image(
-                    painter = painterResource(R.drawable.dice),
+                    painter = painterResource(R.drawable.dice_image),
                     contentDescription = "Dice",
                     modifier = Modifier
-                        .fillMaxSize(0.5f)
+                        .fillMaxSize(0.90f)
                         .clickable {
                             isRolling = true
                             coroutineScope.launch {
