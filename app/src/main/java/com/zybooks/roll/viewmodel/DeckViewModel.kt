@@ -7,17 +7,25 @@ import com.zybooks.roll.data.model.Category
 
 class DeckViewModel: ViewModel() {
     private val _categories = mutableStateListOf(
-        Category(1, "Restaurants"),
-        Category(2, "Hikes")
+        Category(1, "Study Spots"),
+        Category(2, "Hikes"),
+        Category(3, "Nearby cities")
     )
     val categories: List<Category> = _categories
 
     private val _activities = mutableStateListOf(
-        ActivityItem(id = 1, name = "Pizza", address = "123 Pizza St San Luis Obispo, CA 93405", "Must try!", categoryId = 1),
-        ActivityItem(id = 2, name = "BBQ", address = "123 BBQ St San Luis Obispo, CA 93405", categoryId = 1),
-        ActivityItem(id = 3, name = "Bishop", address = "123 Cerro St San Luis Obispo, CA 93405", "Must hike!", categoryId = 2),
-        ActivityItem(id = 4, name = "The P", address = "123 Grand St San Luis Obispo, CA 93405", "Easy hike!", categoryId = 2),
-
+        ActivityItem(id = 1, name = "Scout Coffee", address = "880 Foothill Blvd, San Luis Obispo, CA 93405", "Must try!", categoryId = 1),
+        ActivityItem(id = 2, name = "Kreuzberg", address = "685 Higuera St, San Luis Obispo, CA 93401", "Open till 9", categoryId = 1),
+        ActivityItem(id = 3, name = "SLO Public Market", address = " 3845 S Higuera St, San Luis Obispo, CA 93401", "Upstairs area has outlets and boba!", categoryId = 1),
+        ActivityItem(id = 4, name = "SloDoCo", address = "793 Foothill Blvd, San Luis Obispo, CA 93405", "Open 24/7!", categoryId = 1),
+        ActivityItem(id = 5, name = "The P", address = "Muir 127, 1 Grand Ave, San Luis Obispo, CA 93405", "Quick hike on campus", categoryId = 2),
+        ActivityItem(id = 6, name = "Bishop Peak", address = "Patricia Drive Entrance", "Steeep", categoryId = 2),
+        ActivityItem(id = 7, name = "Cerro / Madonna", address = "Marsh entrance", "Christmas tree up in December", categoryId = 2),
+        ActivityItem(id = 8, name = "Ontario Ridge", address = "Shell Beach Entrance", "Super steep but great views and a swing!", categoryId = 2),
+        ActivityItem(id = 9, name = "Cambria", address = "Cambria, CA", "Cambria Christmas Market, Hearst Castle", categoryId = 3),
+        ActivityItem(id = 10, name = "Cayucos", address = "Cayucos, CA", "Antique stores, Hidden Kitchen for brunch!", categoryId = 3),
+        ActivityItem(id = 11, name = "Morro Bay", address = "Morro Bay, CA", "Take pictures by the rock, gift shops", categoryId = 3),
+        ActivityItem(id = 12, name = "Solvang", address = "Solvang, CA", "Danish town, pastries, Ostrich Farm", categoryId = 3),
         )
 
     val activities: List<ActivityItem> = _activities
