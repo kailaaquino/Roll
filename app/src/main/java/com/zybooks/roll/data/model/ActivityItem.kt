@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(foreignKeys = [ForeignKey(
     entity = Category::class,
     parentColumns = ["id"],
-    childColumns = ["categoryId"],
+    childColumns = ["category_id"],
     onDelete = ForeignKey.CASCADE
 )])
 
@@ -18,6 +18,7 @@ data class ActivityItem(
     val address: String? = null,
     val notes: String? = null,
     val isCompleted: Boolean = false,
-    val categoryId: Long = 0
+    @ColumnInfo(name = "category_id")
+    var categoryId: Long = 0
 )
 
