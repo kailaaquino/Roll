@@ -10,6 +10,34 @@ The **Deck** holds all of the user's adventure ideas, where they can create cust
 
 ## Demo:
 
+## App Features: 
+### Roll:
+* Shake to roll: Android Accelormeter
+* Tap to Roll
+
+### Deck:
+* Categories: Create, edit, delete
+* Activites: Create, edit, delete
+* Roll from category
+* View activities within a category
+
+## Technologies Used:
+* Kotlin
+* Jetpack Compose
+* Navigation
+* ViewModel
+* Room Database
+* Accelerometer Sensors
+* Coroutines
+* Lottie animation for Dice roll
+  
+    [Animation Source](https://lottiefiles.com/free-animation/dice-roll-lalli-WjZiD1nJJv)
+* Material 3
+
+## Dependencies 
+
+
+
 ## Figma Wireframe (mid - fi):
 <img width="754" height="717" alt="Screenshot 2025-12-08 at 8 12 04 PM" src="https://github.com/user-attachments/assets/757b232a-098f-4cee-acce-d8222242be15" />
 
