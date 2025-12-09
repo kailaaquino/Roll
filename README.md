@@ -9,6 +9,14 @@ Upon opening the app, the **Roll** screen is displayed. This screen features a d
 The **Deck** holds all of the user's adventure ideas, where they can create custom categories and input their activities or destinations. In the deck, the user can "roll" from a select category and view the address or notes about the selected activity.
 
 ## Demo:
+<div>
+    <a href="https://www.loom.com/share/f099e11bd0254f628dbc0b95dd5c9e24">
+      <p>Roll Demo  - Watch Video</p>
+    </a>
+    <a href="https://www.loom.com/share/f099e11bd0254f628dbc0b95dd5c9e24">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/f099e11bd0254f628dbc0b95dd5c9e24-768db8cbaf4889ad-full-play.gif#t=0.1">
+    </a>
+  </div>
 
 ## App Features: 
 ### Roll:
