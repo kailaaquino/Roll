@@ -13,9 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zybooks.roll.data.model.ActivityItem
+import com.zybooks.roll.ui.Routes
 import com.zybooks.roll.ui.components.ActivityDetailCard
 import com.zybooks.roll.viewmodel.DeckViewModel
+import kotlinx.serialization.InternalSerializationApi
 
+@OptIn(InternalSerializationApi::class)
 @Composable
 fun ActivityDetailsScreen(
     navController: NavController,
@@ -46,6 +49,23 @@ fun ActivityDetailsScreen(
                 if (activity.isCompleted) "Mark as Incomplete"
                 else "Mark as Completed"
             )
+        }
+        Button(
+            onClick = {
+                navController.navigate(
+                    Routes.CreateActivity(
+                        categoryId = activity.categoryId,
+                        activityId = activity.id
+                    )
+                )
+//                viewModel.updateActivity(activity)
+//                navController.popBackStack()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        ) {
+            Text("Edit")
         }
         Button(
             onClick = {

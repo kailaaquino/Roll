@@ -15,6 +15,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,11 +33,35 @@ import com.zybooks.roll.viewmodel.DeckViewModel
 fun CreateActivityScreen(
     navController: NavController,
     viewModel: DeckViewModel,
-    categoryId: Long
+    categoryId: Long,
+    activityId: Long? = null
 ){
-    var activityName by remember { mutableStateOf("") }
-    var activityAddress by remember { mutableStateOf("") }
-    var activityNote by remember { mutableStateOf("") }
+    val existingActivity = activityId?.let {
+        viewModel.getActivity(it).collectAsState(initial = null).value
+    }
+
+    val isEditing = existingActivity != null
+    val title = if (isEditing) "Edit Activity" else "Create Activity"
+
+    var activityName by remember {
+        mutableStateOf(existingActivity?.name ?: "")
+    }
+
+    var activityAddress by remember {
+        mutableStateOf(existingActivity?.address ?: "")
+    }
+
+    var activityNote by remember {
+        mutableStateOf(existingActivity?.notes ?: "")
+    }
+
+    LaunchedEffect(existingActivity) {
+        if (existingActivity != null) {
+            activityName = existingActivity.name
+            activityAddress = existingActivity.address ?: ""
+            activityNote = existingActivity.notes ?: ""
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -77,7 +103,7 @@ fun CreateActivityScreen(
 
                 ) {
                     Text(
-                        text = "Create a new category",
+                        text = title,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -110,18 +136,28 @@ fun CreateActivityScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         onClick = {
-                            viewModel.addActivity(
-                                name = activityName,
-                                categoryId = categoryId,
-                                address = activityAddress.ifBlank { null },
-                                notes = activityNote.ifBlank { null }
-                            )
+                            if (isEditing) {
+                                val updated = existingActivity!!.copy(
+                                    name = activityName,
+                                    address = activityAddress.ifBlank { null },
+                                    notes = activityNote.ifBlank { null }
+                                )
+                                viewModel.updateActivity(updated)
+
+                            } else {
+                                viewModel.addActivity(
+                                    name = activityName,
+                                    categoryId = categoryId,
+                                    address = activityAddress.ifBlank { null },
+                                    notes = activityNote.ifBlank { null }
+                                )
+                            }
                             navController.popBackStack()
 
                         }
                     )
                     {
-                        Text("Add Activity")
+                        Text(if (isEditing) "Save Changes" else "Add Activity")
                     }
                 }
             }

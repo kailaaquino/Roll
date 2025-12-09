@@ -51,7 +51,10 @@ sealed class Routes {
     data class CategoryDetail(val categoryId: Long)
 
     @Serializable
-    data class CreateActivity(val categoryId: Long)
+    data class CreateActivity(
+        val categoryId: Long,
+        val activityId: Long? = null
+    )
 
     @Serializable
     data class ActivityDetails(val activityId: Long)
@@ -155,9 +158,11 @@ fun RollApp(
                 CreateActivityScreen(
                     navController = navController,
                     viewModel = deckViewModel,
-                    categoryId = args.categoryId
+                    categoryId = args.categoryId,
+                    activityId = args.activityId
                 )
             }
+
             composable<Routes.ActivityDetails> { entry ->
                 val args = entry.toRoute<Routes.ActivityDetails>()
 
