@@ -29,6 +29,11 @@ class DeckViewModel(
         return categories.value.find { it.id == categoryId }?.name ?: "Unknown Category"
     }
 
+    fun getCategory(categoryId: Long): Flow<Category?> {
+        return repo.getCategory(categoryId)
+    }
+
+
     fun addCategory(name : String){
         viewModelScope.launch(Dispatchers.IO) {
             val category = Category(name = name)

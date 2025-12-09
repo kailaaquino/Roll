@@ -1,6 +1,8 @@
 package com.zybooks.roll.ui.components
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,6 +36,9 @@ fun CategoryCard(
     category: Category,
     modifier: Modifier = Modifier,
     isAddCard: Boolean = false,
+    isSelected: Boolean = false,
+    showSelection: Boolean = false,
+    onClick: () -> Unit = {},
     onRollClick: (Long) -> Unit = {}
 ) {
     Column(
@@ -44,6 +49,12 @@ fun CategoryCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(0.75f)
+                .clickable { onClick() },
+            border = if (showSelection && isSelected)
+                BorderStroke(3.dp, MaterialTheme.colorScheme.primary)
+            else
+                null,
+            shape = RoundedCornerShape(12.dp)
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -56,22 +67,22 @@ fun CategoryCard(
                 )
             }
         }
+
         Text(
             text = category.name,
             style = MaterialTheme.typography.titleMedium,
             color = if (isAddCard) Color.Gray else Color.Black
         )
+
         OutlinedButton(
-            onClick = { onRollClick(category.id)},
+            onClick = { if (!showSelection && !isAddCard) onRollClick(category.id) },
+            enabled = !showSelection && !isAddCard,
             modifier = Modifier
                 .wrapContentHeight()
                 .fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
-
-
+            shape = RoundedCornerShape(12.dp)
         ) {
             Text("Roll")
         }
     }
 }
-

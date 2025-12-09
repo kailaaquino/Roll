@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
-@kotlinx.serialization.InternalSerializationApi
+@InternalSerializationApi
 sealed class Routes {
     @Serializable
     data object Deck
@@ -45,7 +45,7 @@ sealed class Routes {
     data object Roll
 
     @Serializable
-    data object CreateCategory
+    data class CreateCategory(val categoryId: Long? = null)
 
     @Serializable
     data class CategoryDetail(val categoryId: Long)
@@ -128,16 +128,21 @@ fun RollApp(
                     navController = navController,
                     viewModel = deckViewModel,
                     onAddCategoryClick = {
-                        navController.navigate(Routes.CreateCategory)
+                        navController.navigate(Routes.CreateCategory())
                     }
                 )
             }
-            composable<Routes.CreateCategory> {
+
+            composable<Routes.CreateCategory> { entry ->
+                val args = entry.toRoute<Routes.CreateCategory>()
+
                 CreateCategoryScreen(
                     navController = navController,
-                    viewModel = deckViewModel
+                    viewModel = deckViewModel,
+                    categoryId = args.categoryId
                 )
             }
+
             composable<Routes.CategoryDetail> { backStackEntry ->
                 val args = backStackEntry.toRoute<Routes.CategoryDetail>()
 

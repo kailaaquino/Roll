@@ -17,6 +17,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,9 +37,25 @@ import com.zybooks.roll.viewmodel.DeckViewModel
 @Composable
 fun CreateCategoryScreen(
     navController: NavController,
-    viewModel: DeckViewModel
-    ) {
+    viewModel: DeckViewModel,
+    categoryId: Long? = null
+) {
+    val existingCategory = categoryId?.let {
+        viewModel.getCategory(it).collectAsState(initial = null).value
+    }
+
+    val isEditing = existingCategory != null
+    val title = if (isEditing) "Edit Category" else "Create Category"
+    val buttonText = if (isEditing) "Save Changes" else "Add Category"
+
     var categoryName by remember { mutableStateOf("") }
+
+    LaunchedEffect(existingCategory) {
+        if (existingCategory != null) {
+            categoryName = existingCategory.name
+        }
+    }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -46,7 +64,6 @@ fun CreateCategoryScreen(
             modifier = Modifier
                 .aspectRatio(0.75f)
                 .padding(32.dp)
-
         ) {
             Box(
                 modifier = Modifier
@@ -69,16 +86,17 @@ fun CreateCategoryScreen(
                     style = MaterialTheme.typography.displaySmall,
                     color = Color.Black
                 )
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
-
                 ) {
+
                     Text(
-                        text = "Create a new category",
+                        text = title,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -91,18 +109,22 @@ fun CreateCategoryScreen(
                         onValueChange = { categoryName = it },
                         label = { Text("Category Name") },
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     Button(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            viewModel.addCategory(categoryName)
+                            if (isEditing) {
+                                val updated = existingCategory!!.copy(name = categoryName)
+                                viewModel.updateCategory(updated)
+                            } else {
+                                viewModel.addCategory(categoryName)
+                            }
                             navController.popBackStack()
                         }
-                    )
-                    {
-                        Text("Add Category")
+                    ) {
+                        Text(buttonText)
                     }
                 }
             }
