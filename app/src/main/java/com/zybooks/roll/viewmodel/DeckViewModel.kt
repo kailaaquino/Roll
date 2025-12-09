@@ -1,107 +1,108 @@
 package com.zybooks.roll.viewmodel
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.zybooks.roll.data.RollRepository
 import com.zybooks.roll.data.model.ActivityItem
 import com.zybooks.roll.data.model.Category
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class DeckViewModel: ViewModel() {
-    private val _categories = mutableStateListOf(
-        Category(1, "Study Spots"),
-        Category(2, "Hikes"),
-        Category(3, "Nearby cities")
-    )
-    val categories: List<Category> = _categories
+class DeckViewModel(
+    private val repo: RollRepository
+) : ViewModel() {
 
-    private val _activities = mutableStateListOf(
-        ActivityItem(id = 1, name = "Scout Coffee", address = "880 Foothill Blvd, San Luis Obispo, CA 93405", "Must try!", categoryId = 1),
-        ActivityItem(id = 2, name = "Kreuzberg", address = "685 Higuera St, San Luis Obispo, CA 93401", "Open till 9", categoryId = 1),
-        ActivityItem(id = 3, name = "SLO Public Market", address = " 3845 S Higuera St, San Luis Obispo, CA 93401", "Upstairs area has outlets and boba!", categoryId = 1),
-        ActivityItem(id = 4, name = "SloDoCo", address = "793 Foothill Blvd, San Luis Obispo, CA 93405", "Open 24/7!", categoryId = 1),
-        ActivityItem(id = 5, name = "The P", address = "Muir 127, 1 Grand Ave, San Luis Obispo, CA 93405", "Quick hike on campus", categoryId = 2),
-        ActivityItem(id = 6, name = "Bishop Peak", address = "Patricia Drive Entrance", "Steeep", categoryId = 2),
-        ActivityItem(id = 7, name = "Cerro / Madonna", address = "Marsh entrance", "Christmas tree up in December", categoryId = 2),
-        ActivityItem(id = 8, name = "Ontario Ridge", address = "Shell Beach Entrance", "Super steep but great views and a swing!", categoryId = 2),
-        ActivityItem(id = 9, name = "Cambria", address = "Cambria, CA", "Cambria Christmas Market, Hearst Castle", categoryId = 3),
-        ActivityItem(id = 10, name = "Cayucos", address = "Cayucos, CA", "Antique stores, Hidden Kitchen for brunch!", categoryId = 3),
-        ActivityItem(id = 11, name = "Morro Bay", address = "Morro Bay, CA", "Take pictures by the rock, gift shops", categoryId = 3),
-        ActivityItem(id = 12, name = "Solvang", address = "Solvang, CA", "Danish town, pastries, Ostrich Farm", categoryId = 3),
-        )
+    val categories: StateFlow<List<Category>> =
+        repo.getCategories()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000L),
+                initialValue = emptyList()
+            )
 
-    val activities: List<ActivityItem> = _activities
-
-    fun addCategory(name: String) {
-        val newId = (_categories.maxOfOrNull { it.id } ?: 0) + 1
-        _categories.add(Category(newId, name))
+    fun getCategoryNameById(categoryId: Long): String {
+        return categories.value.find { it.id == categoryId }?.name ?: "Unknown Category"
     }
 
-    fun getActivitiesForCategory(categoryId: Int?): List<ActivityItem> {
-        return _activities.filter { it.categoryId == categoryId }
+    fun addCategory(name : String){
+        viewModelScope.launch(Dispatchers.IO) {
+            val category = Category(name = name)
+            repo.addCategory(category)
+        }
+    }
+    fun deleteCategory(category: Category) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.deleteCategory(category)
+        }
     }
 
-    fun getCategoryNameById(categoryId: Int): String {
-        return categories.find { it.id == categoryId }?.name ?: "Unknown Category"
+    fun updateCategory(category: Category) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.updateCategory(category)
+        }
     }
 
-    fun getActivityById(id: Int): ActivityItem? {
-        return activities.find { it.id == id }
+    fun getActivitiesForCategory(categoryId: Long): Flow<List<ActivityItem>> {
+        return repo.getActivitiesForCategory(categoryId)
+    }
+
+    fun getActivity(activityId: Long): Flow<ActivityItem?> {
+        return repo.getActivity(activityId)
     }
 
     fun addActivity(
         name: String,
-        categoryId: Int,
+        categoryId: Long,
         address: String? = null,
-        note: String? = null)
-    {
-        val newId = (_activities.maxOfOrNull { it.id } ?: 0) + 1
-        val activity = ActivityItem(
-            id = newId,
+        notes: String? = null
+    ) {
+        val newActivity = ActivityItem(
             name = name,
-            categoryId = categoryId,
             address = address,
-            notes = note,
-            isCompleted = false
+            notes = notes,
+            categoryId = categoryId
         )
-        _activities.add(activity)
-    }
-    fun toggleActivityStatus(activityId: Int) {
-        val index = _activities.indexOfFirst { it.id == activityId }
-        if (index != -1) {
-            val old = _activities[index]
-            _activities[index] = old.copy(
-                isCompleted = !old.isCompleted
-            )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.addActivity(newActivity)
         }
     }
 
-    fun rollAnyActivity(): ActivityItem? {
-        if (_activities.isEmpty()) {
-            return null
-        }
-
-        val incomplete = _activities.filter { !it.isCompleted }
-
-        if (incomplete.isEmpty()) {
-            return null
-        }
-
-        return incomplete.random()
-    }
-//        val incomplete = _activities.filter { !it.isCompleted }
-//        return incomplete.randomOrNull()
-
-
-    fun rollActivityFromCategory(categoryId: Int): ActivityItem? {
-        val activitiesInCategory = _activities.filter { it.categoryId == categoryId }
-        if (activitiesInCategory.isEmpty()) {
-            return null
-        }
-
-        val incomplete = activitiesInCategory.filter { !it.isCompleted }
-        return if (incomplete.isNotEmpty()) {
-            incomplete.random()
-        } else {
-            null
+    fun toggleActivityStatus(activity: ActivityItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val updated = activity.copy(isCompleted = !activity.isCompleted)
+            repo.updateActivity(updated)
         }
     }
+
+    fun rollAnyActivity(onResult: (ActivityItem?) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val all = repo.getAllActivities().firstOrNull() ?: emptyList()
+            val incomplete = all.filter { !it.isCompleted }
+            onResult(incomplete.randomOrNull())
+        }
+    }
+
+    fun rollActivityFromCategory(categoryId: Long, onResult: (ActivityItem?) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val list = repo.getActivitiesForCategory(categoryId).firstOrNull() ?: emptyList()
+            val incomplete = list.filter { !it.isCompleted }
+            onResult(incomplete.randomOrNull())
+        }
+    }
+    suspend fun rollAnyActivitySuspending(): ActivityItem? {
+        val all = repo.getAllActivities().firstOrNull() ?: emptyList()
+        return all.filter { !it.isCompleted }.randomOrNull()
+    }
+
+    suspend fun rollActivityFromCategorySuspending(categoryId: Long): ActivityItem? {
+        val list = repo.getActivitiesForCategory(categoryId).firstOrNull() ?: emptyList()
+        return list.filter { !it.isCompleted }.randomOrNull()
+    }
+
 }

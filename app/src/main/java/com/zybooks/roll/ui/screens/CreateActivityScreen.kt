@@ -31,7 +31,7 @@ import com.zybooks.roll.viewmodel.DeckViewModel
 fun CreateActivityScreen(
     navController: NavController,
     viewModel: DeckViewModel,
-    categoryId: Int
+    categoryId: Long
 ){
     var activityName by remember { mutableStateOf("") }
     var activityAddress by remember { mutableStateOf("") }
@@ -114,7 +114,7 @@ fun CreateActivityScreen(
                                 name = activityName,
                                 categoryId = categoryId,
                                 address = activityAddress.ifBlank { null },
-                                note = activityNote.ifBlank { null }
+                                notes = activityNote.ifBlank { null }
                             )
                             navController.popBackStack()
 

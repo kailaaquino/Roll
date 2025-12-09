@@ -21,6 +21,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,10 +39,13 @@ import kotlinx.serialization.InternalSerializationApi
 fun CategoryDetailsScreen(
     navController: NavController,
     viewModel: DeckViewModel,
-    categoryId: Int,
+    categoryId: Long,
     onAddActivityClick: () -> Unit
 ){
-    val activities = viewModel.getActivitiesForCategory(categoryId)
+//    val activities = viewModel.getActivitiesForCategory(categoryId)
+    val activitiesFlow = viewModel.getActivitiesForCategory(categoryId)
+    val activities by activitiesFlow.collectAsState(initial = emptyList())
+
     val categoryName = viewModel.getCategoryNameById(categoryId)
 
 
@@ -87,7 +92,7 @@ fun CategoryDetailsScreen(
             }
             item {
                 ActivityCard(
-                    activity = ActivityItem(id = 0, name = "Add Activity", categoryId = 0),
+                    activity = ActivityItem(id = 0, name = "Add Activity", categoryId = 0L),
                     isAddCard = true,
                     modifier = Modifier.clickable {
                         Log.d("Detail screen", "Add activity clicked")

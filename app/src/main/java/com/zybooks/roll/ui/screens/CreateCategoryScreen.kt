@@ -35,7 +35,7 @@ import com.zybooks.roll.viewmodel.DeckViewModel
 @Composable
 fun CreateCategoryScreen(
     navController: NavController,
-    viewModel: DeckViewModel = viewModel()
+    viewModel: DeckViewModel
     ) {
     var categoryName by remember { mutableStateOf("") }
     Box(

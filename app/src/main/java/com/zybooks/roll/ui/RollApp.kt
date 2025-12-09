@@ -10,9 +10,11 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -30,6 +32,7 @@ import com.zybooks.roll.ui.screens.RollScreen
 import com.zybooks.roll.ui.screens.RolledActivityScreen
 import com.zybooks.roll.viewmodel.DeckViewModel
 import com.zybooks.roll.viewmodel.RollViewModel
+import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
@@ -45,30 +48,28 @@ sealed class Routes {
     data object CreateCategory
 
     @Serializable
-    data class CategoryDetail(val categoryId: Int)
+    data class CategoryDetail(val categoryId: Long)
 
     @Serializable
-    data class CreateActivity(val categoryId: Int)
+    data class CreateActivity(val categoryId: Long)
 
     @Serializable
-    data class ActivityDetails(val activityId: Int)
+    data class ActivityDetails(val activityId: Long)
 
     @Serializable
     data class RolledActivity(
-        val activityId: Int,
-        val categoryId: Int? = null,
+        val activityId: Long,
+        val categoryId: Long? = null,
         val sourceScreen: String)
 }
 
 @OptIn(InternalSerializationApi::class)
 @Composable
 fun RollApp(
+    deckViewModel: DeckViewModel,
+    rollViewModel: RollViewModel
 ) {
     val navController = rememberNavController()
-
-    val deckViewModel: DeckViewModel = viewModel()
-    val rollViewModel: RollViewModel = viewModel()
-
 
     val navItemList = listOf(
         NavItem(
@@ -157,9 +158,11 @@ fun RollApp(
                     categoryId = args.categoryId
                 )
             }
-            composable<Routes.ActivityDetails> { backStackEntry ->
-                val args = backStackEntry.toRoute<Routes.ActivityDetails>()
-                val activity = deckViewModel.getActivityById(args.activityId)
+            composable<Routes.ActivityDetails> { entry ->
+                val args = entry.toRoute<Routes.ActivityDetails>()
+
+                val activityFlow = deckViewModel.getActivity(args.activityId.toLong())
+                val activity = activityFlow.collectAsState(initial = null).value
 
                 if (activity != null) {
                     ActivityDetailsScreen(
@@ -168,42 +171,57 @@ fun RollApp(
                         activity = activity
                     )
                 } else {
-                    // fallback UI if somehow not found
                     Text("Activity not found")
                 }
             }
-            composable<Routes.RolledActivity> { backStackEntry ->
-                val args = backStackEntry.toRoute<Routes.RolledActivity>()
-                val activity = deckViewModel.getActivityById(args.activityId)
-                val rollCategory = args.categoryId
-                val source = args.sourceScreen
+
+            composable<Routes.RolledActivity> { entry ->
+                val args = entry.toRoute<Routes.RolledActivity>()
+
+                val coroutineScope = rememberCoroutineScope()
+
+                val activityFlow = deckViewModel.getActivity(args.activityId.toLong())
+                val activity = activityFlow.collectAsState(initial = null).value
 
                 if (activity != null) {
                     RolledActivityScreen(
                         navController = navController,
                         viewModel = deckViewModel,
                         activity = activity,
-                        sourceScreen = source,
+                        sourceScreen = args.sourceScreen,
+
                         onGo = {
                             navController.navigate(Routes.ActivityDetails(activity.id))
                         },
+
                         onRollAgain = {
-                            val newResult = if (rollCategory == null) {
-                                deckViewModel.rollAnyActivity()
-                            } else {
-                                deckViewModel.rollActivityFromCategory(rollCategory)
-                            }
+                            coroutineScope.launch {
+                                val newResult =
+                                    if (args.categoryId == null) {
+                                        deckViewModel.rollAnyActivitySuspending()
+                                    } else {
+                                        deckViewModel.rollActivityFromCategorySuspending(
+                                            args.categoryId.toLong()
+                                        )
+                                    }
 
-                            newResult?.let {
-                                navController.navigate(Routes.RolledActivity(it.id, rollCategory, source))
+                                newResult?.let {
+                                    navController.navigate(
+                                        Routes.RolledActivity(
+                                            activityId = it.id,
+                                            categoryId = args.categoryId,
+                                            sourceScreen = args.sourceScreen
+                                        )
+                                    )
+                                }
                             }
-
                         }
                     )
                 } else {
                     Text("Activity not found")
                 }
             }
+
         }
     }
 }

@@ -34,7 +34,7 @@ fun CategoryCard(
     category: Category,
     modifier: Modifier = Modifier,
     isAddCard: Boolean = false,
-    onRollClick: (Int) -> Unit = {}
+    onRollClick: (Long) -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

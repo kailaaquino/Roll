@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 
 import com.zybooks.roll.data.model.Category
 import com.zybooks.roll.data.model.ActivityItem
+import kotlinx.coroutines.flow.Flow
 
 class RollRepository(context: Context) {
     private val databaseCallback = object : RoomDatabase.Callback() {
@@ -31,8 +32,12 @@ class RollRepository(context: Context) {
     private val categoryDao = database.categoryDao()
     private val activityDao = database.activityDao()
 
-    fun getCategory(categoryId: Long) = categoryDao.getCategory(categoryId)
-    fun getCategories() = categoryDao.getCategories()
+    fun getCategories(): Flow<List<Category>> =
+        categoryDao.getCategories()
+
+    fun getCategory(id: Long): Flow<Category?> =
+        categoryDao.getCategory(id)
+
     fun addCategory(category: Category) {
         CoroutineScope(Dispatchers.IO).launch {
             categoryDao.addCategory(category)
@@ -51,8 +56,15 @@ class RollRepository(context: Context) {
         }
     }
 
-    fun getActivity(activityId: Long) = activityDao.getActivity(activityId)
-    fun getActivities(categoryId: Long) = activityDao.getActivities(categoryId)
+    fun getAllActivities(): Flow<List<ActivityItem>> =
+        activityDao.getAllActivities()
+
+    fun getActivitiesForCategory(categoryId: Long): Flow<List<ActivityItem>> =
+        activityDao.getActivitiesForCategory(categoryId)
+
+    fun getActivity(id: Long): Flow<ActivityItem?> =
+        activityDao.getActivity(id)
+
     fun addActivity(activity: ActivityItem) {
         CoroutineScope(Dispatchers.IO).launch {
             activityDao.addActivity(activity)

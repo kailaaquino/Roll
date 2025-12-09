@@ -13,7 +13,8 @@ import androidx.room.PrimaryKey
 )])
 
 data class ActivityItem(
-    val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val name: String,
     val address: String? = null,
     val notes: String? = null,

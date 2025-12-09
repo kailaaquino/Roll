@@ -1,5 +1,6 @@
 package com.zybooks.roll.ui.screens
 
+import android.util.Log
 import com.zybooks.roll.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -41,7 +42,7 @@ import kotlinx.serialization.InternalSerializationApi
 @Composable
 fun RollScreen(
     navController: NavController,
-    deckViewModel: DeckViewModel = viewModel(),
+    deckViewModel: DeckViewModel,
     rollViewModel: RollViewModel = viewModel()
     ) {
     val coroutineScope = rememberCoroutineScope()
@@ -65,7 +66,7 @@ fun RollScreen(
             isRolling = true
             delay(2500)
 
-            val result = deckViewModel.rollAnyActivity()
+            val result = deckViewModel.rollAnyActivitySuspending()
 
             if (result == null) {
                 rollMessage = "All activities are completed! Add more to keep rolling."
@@ -113,12 +114,13 @@ fun RollScreen(
                             isRolling = true
                             coroutineScope.launch {
                                 delay(2500)
-                                val result = deckViewModel.rollAnyActivity()
+                                val result = deckViewModel.rollAnyActivitySuspending()
                                 if (result != null) {
                                     navController.navigate(Routes.RolledActivity(result.id, null, "roll"))
                                 }
                                 else{
                                     rollMessage = "All activities are completed! Add more to keep rolling."
+                                    Log.d("RollScreen", rollMessage)
                                 }
                             }
                         }

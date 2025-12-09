@@ -12,10 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.zybooks.roll.data.RollRepository
 import com.zybooks.roll.sensors.AccelerometerSensor
 import com.zybooks.roll.ui.RollApp
 import com.zybooks.roll.ui.screens.DeckScreen
 import com.zybooks.roll.ui.theme.RollTheme
+import com.zybooks.roll.viewmodel.DeckViewModel
 import com.zybooks.roll.viewmodel.RollViewModel
 
 
@@ -26,6 +30,20 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val repo = RollRepository(applicationContext)
+
+        val deckViewModelFactory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(DeckViewModel::class.java)) {
+                    return DeckViewModel(repo) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
+        }
+        val deckViewModel: DeckViewModel =
+            ViewModelProvider(this, deckViewModelFactory)
+                .get(DeckViewModel::class.java)
 
         enableEdgeToEdge()
 
@@ -39,7 +57,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RollTheme {
-                RollApp()
+                RollApp(
+                    deckViewModel = deckViewModel,
+                    rollViewModel = rollViewModel
+                )
             }
         }
     }

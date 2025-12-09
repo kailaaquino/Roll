@@ -17,6 +17,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -27,16 +30,19 @@ import com.zybooks.roll.data.model.Category
 import com.zybooks.roll.ui.Routes
 import com.zybooks.roll.ui.components.CategoryCard
 import com.zybooks.roll.viewmodel.DeckViewModel
+import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
 
 @OptIn(ExperimentalMaterial3Api::class, InternalSerializationApi::class)
 @Composable
 fun DeckScreen(
     navController: NavController,
-    viewModel: DeckViewModel = viewModel(),
+    viewModel: DeckViewModel,
     onAddCategoryClick: () -> Unit
     ) {
-    val categories = viewModel.categories
+    val categories by viewModel.categories.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,13 +72,16 @@ fun DeckScreen(
                         },
                         isAddCard = false,
                         onRollClick = { categoryId ->
-                            val rolled = viewModel.rollActivityFromCategory(categoryId)
-                            if (rolled == null) {
-                                Log.d("DeckScreen", "All activities completed in this category! Add more to keep rolling.")
-                            } else {
-                                navController.navigate(Routes.RolledActivity(rolled.id, categoryId, "deck"))
+                            coroutineScope.launch {
+                                val rolled = viewModel.rollActivityFromCategorySuspending(categoryId)
+                                if (rolled == null) {
+                                    Log.d("DeckScreen", "All activities completed in this category! Add more to keep rolling.")
+                                } else {
+                                    navController.navigate(Routes.RolledActivity(rolled.id, categoryId, "deck"))
+                                }
                             }
                         }
+
 
                     )
                 }
