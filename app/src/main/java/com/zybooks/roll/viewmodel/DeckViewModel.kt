@@ -72,6 +72,11 @@ class DeckViewModel(
             repo.addActivity(newActivity)
         }
     }
+    fun deleteActivity(activity: ActivityItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.deleteActivity(activity)
+        }
+    }
 
     fun toggleActivityStatus(activity: ActivityItem) {
         viewModelScope.launch(Dispatchers.IO) {

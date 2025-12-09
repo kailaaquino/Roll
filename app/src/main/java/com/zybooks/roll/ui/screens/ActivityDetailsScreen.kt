@@ -32,6 +32,7 @@ fun ActivityDetailsScreen(
     ) {
         ActivityDetailCard(activity = activity, viewModel = viewModel)
 
+
         Button(
             onClick = {
                 viewModel.toggleActivityStatus(activity)
@@ -45,6 +46,17 @@ fun ActivityDetailsScreen(
                 if (activity.isCompleted) "Mark as Incomplete"
                 else "Mark as Completed"
             )
+        }
+        Button(
+            onClick = {
+                viewModel.deleteActivity(activity)
+                navController.popBackStack()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        ) {
+            Text("Delete")
         }
         Button(
             onClick = {
