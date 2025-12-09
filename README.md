@@ -56,4 +56,7 @@ The **Deck** holds all of the user's adventure ideas, where they can create cust
 
 [Prototype](https://www.figma.com/design/7g7zHRhsIBqEpWAUQQsyHn/Roll?node-id=0-1&t=D1BXOg4xIFhWdXPB-1)
 
-## Dependencies
+## **Note** 
+This app was made for CSC436: Mobile App Development at Cal Poly SLO 
+
+Kaila Aquino December 2025
