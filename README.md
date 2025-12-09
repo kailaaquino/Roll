@@ -12,7 +12,7 @@ The **Deck** holds all of the user's adventure ideas, where they can create cust
 
 ## App Features: 
 ### Roll:
-* Shake to roll: Android Accelormeter
+* Shake to roll: Android Accelerometer
 * Tap to Roll
 
 ### Deck:
@@ -25,6 +25,7 @@ The **Deck** holds all of the user's adventure ideas, where they can create cust
 * Kotlin
 * Jetpack Compose
 * Navigation
+* Kotlin Serialization 
 * ViewModel
 * Room Database
 * Accelerometer Sensors
@@ -34,7 +35,11 @@ The **Deck** holds all of the user's adventure ideas, where they can create cust
     [Animation Source](https://lottiefiles.com/free-animation/dice-roll-lalli-WjZiD1nJJv)
 * Material 3
 
-## Dependencies 
+## Device Requirements
+* Minumum SDK: 24, compatible with Android phone running API 24+ 
+* Target SDK: 36
+* The device must have an accelerometer sensor for the shake to roll feature
+* No network connection or permissions needed
 
 
 
